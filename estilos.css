@@ -1,0 +1,642 @@
+* {
+box-sizing: border-box;
+}
+body {
+margin: 0;
+color: #172033;
+background-color: #f5f7fb;
+font-family:
+Arial,
+Helvetica,
+sans-serif;
+line-height: 1.6;
+}
+a {
+color: inherit;
+}
+img {
+display: block;
+max-width: 100%;
+}
+.contenedor {
+width: min(1180px, 92%);
+margin: 0 auto;
+}
+.seccion {
+padding-top: 50px;
+padding-bottom: 60px;
+}
+.cabecera {
+color: white;
+background-color: #063b7a;
+}
+.cabecera-interior {
+display: flex;
+min-height: 72px;
+align-items: center;
+justify-content: space-between;
+gap: 30px;
+}
+.logo {
+color: white;
+font-size: 1.4rem;
+font-weight: 800;
+text-decoration: none;
+}
+.menu-principal {
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 22px;
+}
+.menu-principal a {
+color: white;
+text-decoration: none;
+}
+.menu-principal a:hover {
+text-decoration: underline;
+}
+.hero {
+padding: 70px 0;
+color: white;
+background:
+linear-gradient(
+135deg,
+#063b7a,
+#1478d4
+);
+}
+.hero-interior {
+display: grid;
+grid-template-columns: 1.4fr 0.8fr;
+gap: 50px;
+align-items: center;
+}
+.hero h1 {
+max-width: 700px;
+margin: 5px 0 20px;
+font-size: clamp(2.3rem, 5vw, 4.5rem);
+line-height: 1.05;
+}
+.hero-texto {
+max-width: 680px;
+font-size: 1.2rem;
+}
+.hero-resumen {
+padding: 28px;
+color: #172033;
+background-color: white;
+border-radius: 16px;
+box-shadow: 0 16px 35px
+rgba(0, 0, 0, 0.18);
+}
+.etiqueta {
+color: #1976d2;
+font-weight: 800;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+}
+.hero .etiqueta {
+color: #cfe8ff;
+}
+.grupo-botones,
+.acciones-filtro {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+}
+.boton {
+    display: inline-block;
+padding: 11px 18px;
+color: white;
+background-color: #0876d1;
+border: 2px solid #0876d1;
+border-radius: 8px;
+font: inherit;
+font-weight: 700;
+text-align: center;
+text-decoration: none;
+cursor: pointer;
+}
+.boton:hover {
+background-color: #045fac;
+border-color: #045fac;
+}
+.boton:disabled {
+cursor: not-allowed;
+opacity: 0.75;
+}
+.boton-secundario {
+color: #063b7a;
+background-color: white;
+}
+.boton-bloque {
+width: 100%;
+}
+.boton-espera {
+background-color: #b56a00;
+border-color: #b56a00;
+}
+.rejilla-ventajas,
+.rejilla-actividades {
+display: grid;
+grid-template-columns:
+repeat(3, minmax(0, 1fr));
+gap: 24px;
+}
+.tarjeta-informativa,
+.tarjeta-actividad,
+.tarjeta-sesion,
+.panel-reserva,
+.informacion-sesion {
+background-color: white;
+border: 1px solid #dce3ed;
+border-radius: 14px;
+box-shadow: 0 8px 22px
+rgba(31, 45, 61, 0.08);
+}
+.tarjeta-informativa {
+padding: 24px;
+}
+.tarjeta-actividad {
+overflow: hidden;
+}
+.imagen-actividad {
+width: 100%;
+height: 210px;
+object-fit: cover;
+}
+.imagen-sin-contenido {
+display: grid;
+height: 210px;
+place-items: center;
+color: #637083;
+background-color: #e8edf4;
+}
+.contenido-tarjeta {
+padding: 24px;
+}
+.metadatos {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+}
+.insignia {
+display: inline-block;
+width: fit-content;
+padding: 5px 10px;
+color: white;
+background-color: #0876d1;
+border-radius: 999px;
+font-size: 0.85rem;
+font-weight: 700;
+}
+.insignia-clara {
+color: #063b7a;
+background-color: #dceeff;
+}
+.dato-destacado,
+.proxima-sesion {
+color: #063b7a;
+font-weight: 700;
+}
+.sin-sesiones {
+color: #6a7482;
+font-style: italic;
+}
+.formulario-filtros {
+display: flex;
+margin: 30px 0;
+padding: 22px;
+align-items: flex-end;
+flex-wrap: wrap;
+gap: 18px;
+background-color: white;
+border: 1px solid #dce3ed;
+border-radius: 12px;
+}
+.campo {
+display: grid;
+min-width: 210px;
+gap: 6px;
+}
+.campo label {
+font-weight: 700;
+}
+.campo input,
+.campo select {
+    min-height: 44px;
+padding: 9px 12px;
+border: 1px solid #aeb8c6;
+border-radius: 7px;
+font: inherit;
+}
+.detalle-actividad {
+padding: 50px 0;
+background-color: white;
+}
+.detalle-cabecera {
+display: grid;
+grid-template-columns: 0.8fr 1.2fr;
+gap: 45px;
+align-items: center;
+}
+.imagen-detalle {
+width: 100%;
+border-radius: 16px;
+}
+.descripcion-destacada {
+font-size: 1.1rem;
+}
+.lista-sesiones {
+display: grid;
+gap: 18px;
+}
+.tarjeta-sesion {
+display: grid;
+grid-template-columns: 180px 1fr 220px;
+padding: 22px;
+gap: 25px;
+align-items: center;
+}
+.fecha-sesion {
+display: grid;
+gap: 5px;
+color: #063b7a;
+}
+.fecha-principal {
+font-size: 1.25rem;
+font-weight: 800;
+}
+.acciones-sesion {
+display: grid;
+gap: 12px;
+}
+.plazas-disponibles {
+color: #117a49;
+font-weight: 800;
+}
+.sesion-completa {
+color: #a15c00;
+font-weight: 800;
+}
+.barra-ocupacion {
+height: 10px;
+overflow: hidden;
+background-color: #e0e6ee;
+border-radius: 999px;
+}
+.barra-ocupacion-interior {
+height: 100%;
+background-color: #15a36d;
+border-radius: inherit;
+}
+.ficha-sesion {
+display: grid;
+grid-template-columns: 1fr 340px;
+gap: 28px;
+align-items: start;
+}
+.informacion-sesion,
+.panel-reserva {
+padding: 28px;
+}
+.panel-reserva {
+position: sticky;
+top: 20px;
+}
+.numero-plazas {
+margin: 5px 0;
+color: #0876d1;
+font-size: 4rem;
+font-weight: 800;
+line-height: 1;
+}
+.rejilla-datos {
+display: grid;
+margin: 25px 0;
+grid-template-columns:
+repeat(3, minmax(0, 1fr));
+gap: 15px;
+}
+.dato {
+display: grid;
+padding: 15px;
+gap: 3px;
+background-color: #f0f5fb;
+border-radius: 9px;
+}
+.dato span {
+color: #637083;
+font-size: 0.9rem;
+}
+.estado {
+display: inline-block;
+padding: 5px 10px;
+border-radius: 999px;
+font-weight: 700;
+}
+.estado-programada {
+color: #075f3a;
+background-color: #d8f3e7;
+}
+.estado-completa {
+color: #895000;
+background-color: #fff0cf;
+}
+.estado-cancelada {
+color: #8c2020;
+background-color: #f9dada;
+}
+.estado-finalizada {
+color: #4d5663;
+background-color: #e4e7eb;
+}
+.mensaje {
+margin: 18px 0;
+padding: 14px 18px;
+border-radius: 8px;
+}
+.mensaje-aviso {
+color: #725000;
+background-color: #fff3cd;
+border: 1px solid #ffe08a;
+}
+.mensaje-error {
+color: #842029;
+background-color: #f8d7da;
+border: 1px solid #f5c2c7;
+}
+.enlace-volver {
+display: inline-block;
+margin-bottom: 18px;
+color: #063b7a;
+font-weight: 700;
+}
+@media (max-width: 850px) {
+.hero-interior,
+.detalle-cabecera,
+.ficha-sesion {
+grid-template-columns: 1fr;
+}
+.rejilla-ventajas,
+.rejilla-actividades {
+grid-template-columns: 1fr 1fr;
+}
+.tarjeta-sesion {
+grid-template-columns: 1fr;
+}
+.panel-reserva {
+position: static;
+}
+}
+@media (max-width: 580px) {
+.cabecera-interior {
+padding: 15px 0;
+align-items: flex-start;
+flex-direction: column;
+}
+.menu-principal {
+gap: 12px;
+}
+.rejilla-ventajas,
+.rejilla-actividades,
+.rejilla-datos {
+grid-template-columns: 1fr;
+}
+.formulario-filtros {
+align-items: stretch;
+flex-direction: column;
+}
+.campo {
+width: 100%;
+}
+}
+.cabecera-admin {
+background-color: #102a43;
+}
+.rejilla-resumen-admin {
+    display: grid;
+margin: 32px 0;
+grid-template-columns:
+repeat(4, minmax(0, 1fr));
+gap: 20px;
+}
+.tarjeta-resumen {
+display: grid;
+padding: 24px;
+gap: 10px;
+color: #172033;
+background-color: white;
+border: 1px solid #dce3ed;
+border-radius: 14px;
+box-shadow: 0 8px 22px
+rgba(31, 45, 61, 0.08);
+text-decoration: none;
+}
+.tarjeta-resumen:hover {
+border-color: #0876d1;
+transform: translateY(-2px);
+}
+.tarjeta-resumen span {
+color: #637083;
+font-weight: 700;
+}
+.tarjeta-resumen strong {
+color: #0876d1;
+font-size: 2.5rem;
+line-height: 1;
+}
+.encabezado-con-accion {
+display: flex;
+margin-bottom: 25px;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 20px;
+}
+.formulario-admin {
+display: grid;
+max-width: 900px;
+padding: 28px;
+grid-template-columns:
+repeat(2, minmax(0, 1fr));
+gap: 20px;
+background-color: white;
+border: 1px solid #dce3ed;
+border-radius: 14px;
+box-shadow: 0 8px 22px
+rgba(31, 45, 61, 0.08);
+}
+.formulario-admin .campo {
+min-width: 0;
+}
+.formulario-admin textarea {
+width: 100%;
+padding: 10px 12px;
+resize: vertical;
+border: 1px solid #aeb8c6;
+border-radius: 7px;
+font: inherit;
+}
+.campo-completo {
+grid-column: 1 / -1;
+}
+.campo-checkbox label {
+display: flex;
+align-items: center;
+gap: 9px;
+font-weight: 700;
+}
+.tabla-responsive {
+overflow-x: auto;
+background-color: white;
+border: 1px solid #dce3ed;
+border-radius: 12px;
+}
+.tabla-admin {
+width: 100%;
+border-collapse: collapse;
+}
+.tabla-admin th,
+.tabla-admin td {
+padding: 14px 16px;
+border-bottom: 1px solid #e3e8ef;
+text-align: left;
+vertical-align: middle;
+}
+.tabla-admin th {
+color: #063b7a;
+background-color: #eef5fc;
+font-size: 0.9rem;
+text-transform: uppercase;
+}
+.tabla-admin tbody tr:hover {
+background-color: #f7faff;
+}
+.mensaje-exito {
+color: #075f3a;
+background-color: #d8f3e7;
+border: 1px solid #9bd9bd;
+}
+@media (max-width: 900px) {
+.rejilla-resumen-admin {
+grid-template-columns: 1fr 1fr;
+}
+}
+@media (max-width: 600px) {
+.rejilla-resumen-admin,
+.formulario-admin {
+grid-template-columns: 1fr;
+}
+.campo-completo {
+grid-column: auto;
+}
+}
+.formulario {
+max-width: 650px;
+margin: 2rem auto;
+padding: 2rem;
+background: #ffffff;
+border-radius: 16px;
+box-shadow: 0 8px 24px rgba(15, 48, 87, 0.1);
+}
+.campo {
+margin-bottom: 1.4rem;
+}
+.campo label {
+display: block;
+margin-bottom: 0.45rem;
+color: #123a63;
+font-weight: 700;
+}
+.campo input,
+.campo select,
+.campo textarea {
+width: 100%;
+padding: 0.85rem;
+border: 1px solid #b9cbe0;
+border-radius: 8px;
+font: inherit;
+}
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+border-color: #1769aa;
+outline: 3px solid rgba(23, 105, 170, 0.15);
+}
+.ayuda {
+margin-top: 0.4rem;
+color: #66788a;
+font-size: 0.9rem;
+}
+.usuario-menu {
+color: #dcecff;
+font-weight: 700;
+}
+.panel-cuenta {
+margin: 2rem 0;
+padding: 1.5rem;
+background: #eef6ff;
+border-left: 5px solid #1769aa;
+border-radius: 10px;
+}
+.panel-cuenta dt {
+margin-top: 1rem;
+color: #123a63;
+font-weight: 700;
+}
+.panel-cuenta dd {
+margin: 0.25rem 0 0;
+}
+.opciones-cuenta {
+display: grid;
+grid-template-columns:
+repeat(auto-fit, minmax(240px, 1fr));
+gap: 1.5rem;
+}
+.boton.desactivado {
+cursor: default;
+opacity: 0.55;
+}
+.resumen-reserva {
+max-width: 700px;
+margin: 2rem auto;
+padding: 2rem;
+background: #ffffff;
+border-radius: 16px;
+box-shadow: 0 8px 24px rgba(15, 48, 87, 0.1);
+}
+.rejilla-reservas {
+display: grid;
+grid-template-columns:
+repeat(auto-fit, minmax(280px, 1fr));
+gap: 1.5rem;
+margin: 1.5rem 0 3rem;
+}
+.tarjeta-reserva {
+padding: 1.5rem;
+background: #ffffff;
+border-top: 5px solid #1769aa;
+border-radius: 14px;
+box-shadow: 0 6px 18px rgba(15, 48, 87, 0.1);
+}
+.tarjeta-reserva.espera {
+border-top-color: #d99a00;
+background: #fffaf0;
+}
+.codigo-reserva {
+padding: 0.8rem;
+color: #123a63;
+background: #eaf4ff;
+border-radius: 8px;
+font-family: monospace;
+font-weight: 700;
+letter-spacing: 0.05em;
+}
+.boton.peligro {
+background: #b42318;
+}
+.boton.peligro:hover {
+background: #8f1c13;
+}
