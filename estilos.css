@@ -514,6 +514,15 @@ text-transform: uppercase;
 .tabla-admin tbody tr:hover {
 background-color: #f7faff;
 }
+.acciones-tabla {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+}
+.boton-pequeno {
+padding: 6px 12px;
+font-size: 0.85rem;
+}
 .mensaje-exito {
 color: #075f3a;
 background-color: #d8f3e7;

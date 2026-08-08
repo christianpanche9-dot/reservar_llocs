@@ -51,6 +51,31 @@ Nueva actividad
 La actividad se ha creado correctamente.
 </div>
 <?php endif; ?>
+<?php if (
+    ($_GET['mensaje'] ?? '') === 'actualizada'
+): ?>
+
+<div class="mensaje mensaje-exito">
+La actividad se ha actualizado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+    ($_GET['mensaje'] ?? '') === 'eliminada'
+): ?>
+
+<div class="mensaje mensaje-exito">
+La actividad se ha eliminado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+    ($_GET['error'] ?? '') === 'en_uso'
+): ?>
+
+<div class="mensaje mensaje-error">
+No se puede eliminar la actividad porque tiene sesiones asociadas.
+Desactívala si no quieres que se siga ofreciendo.
+</div>
+<?php endif; ?>
 <div class="tabla-responsive">
 <table class="tabla-admin">
 <thead>
@@ -60,6 +85,7 @@ La actividad se ha creado correctamente.
 <th>Nivel</th>
 <th>Duración</th>
 <th>Estado</th>
+<th>Acciones</th>
 </tr>
 </thead>
 <tbody>
@@ -101,6 +127,28 @@ Activa
 Inactiva
 </span>
 <?php endif; ?>
+</td>
+<td class="acciones-tabla">
+<a
+class="boton boton-secundario boton-pequeno"
+href="editar_actividad.php?id_actividad=<?= (int) $actividad['id_actividad'] ?>"
+>
+Editar
+</a>
+<form
+action="eliminar_actividad.php"
+method="post"
+onsubmit="return confirm('¿Seguro que quieres eliminar esta actividad?');"
+>
+<input
+type="hidden"
+name="id_actividad"
+value="<?= (int) $actividad['id_actividad'] ?>"
+>
+<button class="boton peligro boton-pequeno" type="submit">
+Eliminar
+</button>
+</form>
 </td>
 </tr>
 

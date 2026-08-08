@@ -45,6 +45,31 @@ Nuevo monitor
 El monitor se ha creado correctamente.
 </div>
 <?php endif; ?>
+<?php if (
+    ($_GET['mensaje'] ?? '') === 'actualizado'
+): ?>
+
+<div class="mensaje mensaje-exito">
+El monitor se ha actualizado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+    ($_GET['mensaje'] ?? '') === 'eliminado'
+): ?>
+
+<div class="mensaje mensaje-exito">
+El monitor se ha eliminado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+    ($_GET['error'] ?? '') === 'en_uso'
+): ?>
+
+<div class="mensaje mensaje-error">
+No se puede eliminar el monitor porque tiene sesiones asociadas.
+Desactívalo si no quieres que se le asignen nuevas sesiones.
+</div>
+<?php endif; ?>
 <div class="tabla-responsive">
 <table class="tabla-admin">
 <thead>
@@ -53,6 +78,7 @@ El monitor se ha creado correctamente.
 <th>Correo</th>
 <th>Especialidad</th>
 <th>Estado</th>
+<th>Acciones</th>
 </tr>
 </thead>
 <tbody>
@@ -81,6 +107,28 @@ $monitor['especialidad']
 <?= (int) $monitor['activo'] === 1
 ? 'Activo'
 : 'Inactivo' ?>
+</td>
+<td class="acciones-tabla">
+<a
+class="boton boton-secundario boton-pequeno"
+href="editar_monitor.php?id_monitor=<?= (int) $monitor['id_monitor'] ?>"
+>
+Editar
+</a>
+<form
+action="eliminar_monitor.php"
+method="post"
+onsubmit="return confirm('¿Seguro que quieres eliminar este monitor?');"
+>
+<input
+type="hidden"
+name="id_monitor"
+value="<?= (int) $monitor['id_monitor'] ?>"
+>
+<button class="boton peligro boton-pequeno" type="submit">
+Eliminar
+</button>
+</form>
 </td>
 </tr>
 <?php endwhile; ?>

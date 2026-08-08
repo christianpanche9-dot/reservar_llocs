@@ -46,8 +46,30 @@ content="width=device-width, initial-scale=1.0"
 
 ($_GET["mensaje"] ?? "") === "sesion_creada"
 ): ?>
-<div class="mensaje exito">
+<div class="mensaje mensaje-exito">
 La sesión se ha creado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+($_GET["mensaje"] ?? "") === "sesion_actualizada"
+): ?>
+<div class="mensaje mensaje-exito">
+La sesión se ha actualizado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+($_GET["mensaje"] ?? "") === "sesion_eliminada"
+): ?>
+<div class="mensaje mensaje-exito">
+La sesión se ha eliminado correctamente.
+</div>
+<?php endif; ?>
+<?php if (
+($_GET["error"] ?? "") === "en_uso"
+): ?>
+<div class="mensaje mensaje-error">
+No se puede eliminar la sesión porque tiene reservas o
+apuntes en lista de espera asociados.
 </div>
 <?php endif; ?>
 <a class="boton" href="nueva_sesion.php">
@@ -57,7 +79,7 @@ Programar una sesión
 <p>No existen sesiones programadas.</p>
 <?php else: ?>
 <div class="tabla-responsive">
-<table>
+<table class="tabla-admin">
     <thead>
 <tr>
 <th>Fecha</th>
@@ -67,6 +89,7 @@ Programar una sesión
 <th>Monitor</th>
 <th>Aforo</th>
 <th>Estado</th>
+<th>Acciones</th>
 </tr>
 </thead>
 <tbody>
@@ -120,6 +143,28 @@ $sesion["monitor_apellidos"]
     <?= htmlspecialchars(
 ucfirst($sesion["estado"])
 ) ?>
+</td>
+<td class="acciones-tabla">
+<a
+class="boton boton-secundario boton-pequeno"
+href="editar_sesion.php?id_sesion=<?= (int) $sesion['id_sesion'] ?>"
+>
+Editar
+</a>
+<form
+action="eliminar_sesion.php"
+method="post"
+onsubmit="return confirm('¿Seguro que quieres eliminar esta sesión?');"
+>
+<input
+type="hidden"
+name="id_sesion"
+value="<?= (int) $sesion['id_sesion'] ?>"
+>
+<button class="boton peligro boton-pequeno" type="submit">
+Eliminar
+</button>
+</form>
 </td>
 </tr>
 <?php endwhile; ?>
