@@ -78,7 +78,7 @@ $participantes =
 $stmt_participantes->get_result();
 $sql_espera = "
 SELECT
-le.id_lista,
+le.id_espera,
 le.fecha_solicitud,
 le.estado,
 u.nombre,
@@ -96,7 +96,7 @@ le.estado,
 'cancelada'
 ),
 le.fecha_solicitud ASC,
-le.id_lista ASC
+le.id_espera ASC
 ";
 $stmt_espera =
 $conexion->prepare($sql_espera);

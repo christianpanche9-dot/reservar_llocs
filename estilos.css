@@ -649,3 +649,62 @@ background: #b42318;
 .boton.peligro:hover {
 background: #8f1c13;
 }
+.filtros {
+display: grid;
+grid-template-columns:
+repeat(auto-fit, minmax(180px, 1fr));
+gap: 1rem;
+align-items: end;
+margin: 2rem 0;
+padding: 1.5rem;
+background: #eef6ff;
+border-radius: 14px;
+}
+.resumen-sesion-admin {
+margin: 1.5rem 0;
+padding: 1.5rem;
+background: #ffffff;
+border-left: 5px solid #1769aa;
+border-radius: 12px;
+box-shadow: 0 5px 16px rgba(15, 48, 87, 0.08);
+}
+.barra-ocupacion,
+.barra-mini {
+overflow: hidden;
+background: #dce8f4;
+border-radius: 999px;
+}
+.barra-ocupacion {
+height: 18px;
+margin-top: 1rem;
+}
+.barra-mini {
+width: 100px;
+height: 8px;
+margin-top: 0.4rem;
+}
+.barra-ocupacion span,
+.barra-mini span {
+display: block;
+height: 100%;
+background: linear-gradient(
+90deg,
+#1769aa,
+#2da44e
+);
+}
+.grupo-botones {
+display: flex;
+flex-wrap: wrap;
+gap: 0.8rem;
+margin: 1.5rem 0;
+}
+.formulario-inline {
+display: flex;
+gap: 0.5rem;
+align-items: center;
+}
+.boton.pequeno {
+padding: 0.45rem 0.7rem;
+font-size: 0.85rem;
+}

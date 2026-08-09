@@ -210,8 +210,7 @@ if ($lista_anterior) {
     $sql_actualizar_lista = "
 UPDATE lista_espera
 SET
-estado = 'promocionada',
-fecha_promocion = NOW()
+estado = 'promocionada'
 WHERE id_espera = ?
 ";
 $stmt_actualizar_lista =
@@ -262,8 +261,7 @@ $sql_espera = "
 UPDATE lista_espera
 SET
 estado = 'esperando',
-fecha_solicitud = NOW(),
-fecha_promocion = NULL
+fecha_solicitud = NOW()
 WHERE id_espera = ?
 ";
 $stmt_espera =

@@ -439,14 +439,8 @@ $aforo,
 $observaciones,
 $id_sesion
 );
-if ($stmt_actualizar->execute()) {
-$stmt_actualizar->close();
-$conexion->close();
+$stmt_actualizar->execute();
 header(
-    "Location: sesiones.php?mensaje=sesion_actualizada"
+"Location: sesiones.php?mensaje=sesion_actualizada"
 );
 exit;
-}
-$stmt_actualizar->close();
-$conexion->close();
-echo "No se ha podido actualizar la sesión.";

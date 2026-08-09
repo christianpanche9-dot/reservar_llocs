@@ -19,6 +19,12 @@ Monitores
 <a href="sesiones.php">
 Sesiones
 </a>
+<a href="reservas.php">
+Reservas
+</a>
+<a href="estadisticas.php">
+Estadísticas
+</a>
 <a href="../index.php">
 Ver web pública
 </a>

@@ -98,16 +98,16 @@ content="width=device-width, initial-scale=1.0"
 <main class="contenedor">
 <h1>Mis reservas</h1>
 <?php if ($mensaje === "confirmada"): ?>
-<div class="mensaje exito">
+<div class="mensaje mensaje-exito">
 La reserva se ha confirmado correctamente.
 </div>
 <?php elseif ($mensaje === "espera"): ?>
-<div class="mensaje aviso">
+<div class="mensaje mensaje-aviso">
 La sesión está completa.
 Te hemos añadido a la lista de espera.
 </div>
 <?php elseif ($mensaje === "cancelada"): ?>
-<div class="mensaje exito">
+<div class="mensaje mensaje-exito">
 La reserva se ha cancelado.
 </div>
 <?php endif; ?>
@@ -212,8 +212,8 @@ Cancelar reserva
 <h2>Lista de espera</h2>
 <?php if ($lista_espera->num_rows === 0): ?>
 <p>
-</p>
 No estás esperando plaza en ninguna sesión.
+</p>
 <?php else: ?>
 <div class="rejilla-reservas">
 <?php while (
@@ -239,9 +239,9 @@ $espera["hora_inicio"],
 ) ?>
 </p>
 <p>
-</p>
 <strong>Posición:</strong>
 <?= (int) $espera["posicion"] ?>
+</p>
 </article>
 <?php endwhile; ?>
 </div>

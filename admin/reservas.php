@@ -341,7 +341,7 @@ $reserva[
 <td>
 <a
 class="boton boton-secundario boton-pequeno"
-href="../detalle_sesion.php?id=<?=
+href="detalles_sesion.php?id=<?=
 (int) $reserva["id_sesion"]
 ?>"
 >
