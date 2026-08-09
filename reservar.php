@@ -85,8 +85,8 @@ content="width=device-width, initial-scale=1.0"
 <h1>Confirmar solicitud</h1>
 <section class="resumen-reserva">
 <h2>
-</h2>
 <?= escapar($sesion["actividad"]) ?>
+</h2>
 <p>
 <strong>Fecha:</strong>
 <?= date(
@@ -95,15 +95,15 @@ strtotime($sesion["fecha"])
 ) ?>
 </p>
 <p>
-–
-</p>
 <strong>Horario:</strong>
 <?= substr($sesion["hora_inicio"], 0, 5) ?>
+–
 <?= substr($sesion["hora_fin"], 0, 5) ?>
-<p>
 </p>
+<p>
 <strong>Espacio:</strong>
 <?= escapar($sesion["espacio"]) ?>
+</p>
 <p>
 <strong>Monitor:</strong>
 <?= escapar(
@@ -119,15 +119,15 @@ Quedan
 plazas disponibles.
 </div>
 <p>
-</p>
 Al confirmar se creará una reserva.
+</p>
 <?php else: ?>
 <div class="mensaje aviso">
 La sesión está completa.
 </div>
 <p>
-</p>
 Al confirmar entrarás en la lista de espera.
+</p>
 <?php endif; ?>
 <form
 action="procesar_reserva.php"
