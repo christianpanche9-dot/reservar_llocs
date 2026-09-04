@@ -20,6 +20,7 @@ s.hora_fin,
 s.aforo,
 s.estado,
 a.nombre AS actividad,
+a.precio AS precio,
 e.nombre AS espacio,
 m.nombre AS monitor_nombre,
 m.apellidos AS monitor_apellidos,
@@ -138,8 +139,29 @@ type="hidden"
 name="id_sesion"
 value="<?= $sesion["id_sesion"] ?>"
 >
+<p>Precio:
+<?= number_format($sesion["precio"], 2) ?> €
+</p>
+<label>
+<input
+type="radio"
+name="metodo_pago"
+value="pago"
+required
+>
+Pagar actividad
+</label>
+<br>
+<label>
+<input
+type="radio"
+name="metodo_pago"
+value="bono"
+>
+Utilizar bono
+</label>
 <button type="submit" class="boton">
-Confirmar solicitud
+Confirmar reserva
 </button>
 </form>
 </section>

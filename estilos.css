@@ -373,6 +373,19 @@ margin-bottom: 18px;
 color: #063b7a;
 font-weight: 700;
 }
+.barra-progreso {
+width: 100%;
+height: 10px;
+border-radius: 6px;
+background-color: #e4e7eb;
+overflow: hidden;
+margin: 8px 0;
+}
+.barra-progreso-relleno {
+height: 100%;
+background-color: #0d6efd;
+border-radius: 6px;
+}
 @media (max-width: 850px) {
 .hero-interior,
 .detalle-cabecera,
@@ -415,7 +428,8 @@ width: 100%;
 .cabecera-admin {
 background-color: #102a43;
 }
-.rejilla-resumen-admin {
+.rejilla-resumen-admin,
+.rejilla-resumen {
     display: grid;
 margin: 32px 0;
 grid-template-columns:
@@ -488,6 +502,24 @@ align-items: center;
 gap: 9px;
 font-weight: 700;
 }
+.dias-semana {
+display: flex;
+flex-wrap: wrap;
+gap: 14px 20px;
+padding: 16px 18px;
+border: 1px solid #dce3ed;
+border-radius: 10px;
+}
+.dias-semana legend {
+padding: 0 6px;
+font-weight: 700;
+}
+.dias-semana label {
+display: flex;
+align-items: center;
+gap: 7px;
+font-weight: 600;
+}
 .tabla-responsive {
 overflow-x: auto;
 background-color: white;
@@ -529,12 +561,14 @@ background-color: #d8f3e7;
 border: 1px solid #9bd9bd;
 }
 @media (max-width: 900px) {
-.rejilla-resumen-admin {
+.rejilla-resumen-admin,
+.rejilla-resumen {
 grid-template-columns: 1fr 1fr;
 }
 }
 @media (max-width: 600px) {
 .rejilla-resumen-admin,
+.rejilla-resumen,
 .formulario-admin {
 grid-template-columns: 1fr;
 }
@@ -633,6 +667,30 @@ box-shadow: 0 6px 18px rgba(15, 48, 87, 0.1);
 .tarjeta-reserva.espera {
 border-top-color: #d99a00;
 background: #fffaf0;
+}
+.tarjeta-reserva.aviso {
+border-top-color: #d99a00;
+background: #fffaf0;
+}
+.filtros-reservas {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+margin: 18px 0;
+}
+.filtros-reservas a {
+padding: 8px 16px;
+color: #172033;
+background-color: white;
+border: 1px solid #dce3ed;
+border-radius: 999px;
+text-decoration: none;
+font-weight: 600;
+}
+.filtros-reservas a.activo {
+color: white;
+background-color: #0876d1;
+border-color: #0876d1;
 }
 .codigo-reserva {
 padding: 0.8rem;

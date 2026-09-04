@@ -62,8 +62,11 @@ Programar sesión | Reservar Llocs
 ← Volver a sesiones
 </a>
 <p class="etiqueta">
-Horarios
+Nueva sesión
 </p>
+<a class="boton boton-secundario" href="nueva_serie_sesiones.php">
+Programa una actividad recurrente
+</a>
 <h1>Programar una sesión</h1>
 <?php if (!$puede_crearse): ?>
 <div class="mensaje mensaje-aviso">

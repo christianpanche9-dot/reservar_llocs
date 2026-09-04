@@ -5,6 +5,69 @@ return strtoupper(
     bin2hex(random_bytes(8))
 );
 }
+/**
+ * Resuelve cómo se paga una reserva dentro de una transacción ya abierta.
+ * Si es con bono, bloquea, comprueba y descuenta un uso.
+ * Devuelve [importe, id_bono_cliente_usado].
+ */
+function resolverMetodoPago(
+mysqli $conexion,
+int $id_usuario,
+string $metodo_pago,
+float $precio
+): array {
+if ($metodo_pago !== "bono") {
+return [$precio, null];
+}
+$sql_bono = "
+SELECT id_bono_cliente, usos_disponibles
+FROM bonos_clientes
+WHERE id_usuario = ?
+AND estado = 'activo'
+AND usos_disponibles > 0
+ORDER BY fecha_compra ASC
+LIMIT 1
+FOR UPDATE
+";
+$stmt_bono = $conexion->prepare($sql_bono);
+$stmt_bono->bind_param("i", $id_usuario);
+$stmt_bono->execute();
+$bono = $stmt_bono->get_result()->fetch_assoc();
+$stmt_bono->close();
+if (!$bono) {
+throw new Exception(
+"No tienes bonos disponibles."
+);
+}
+$id_bono_usado = (int) $bono["id_bono_cliente"];
+$sql_descontar = "
+UPDATE bonos_clientes
+SET usos_disponibles = usos_disponibles - 1
+WHERE id_bono_cliente = ?
+AND usos_disponibles > 0
+";
+$stmt_descontar = $conexion->prepare($sql_descontar);
+$stmt_descontar->bind_param("i", $id_bono_usado);
+$stmt_descontar->execute();
+$consumido = $stmt_descontar->affected_rows === 1;
+$stmt_descontar->close();
+if (!$consumido) {
+throw new Exception(
+"No se ha podido consumir el bono."
+);
+}
+$sql_agotado = "
+UPDATE bonos_clientes
+SET estado = 'agotado'
+WHERE id_bono_cliente = ?
+AND usos_disponibles = 0
+";
+$stmt_agotado = $conexion->prepare($sql_agotado);
+$stmt_agotado->bind_param("i", $id_bono_usado);
+$stmt_agotado->execute();
+$stmt_agotado->close();
+return [0.00, $id_bono_usado];
+}
 function cancelarReservaYPromocionar(
 mysqli $conexion,
 int $id_reserva,
@@ -24,6 +87,8 @@ r.id_reserva,
 r.id_sesion,
 r.id_usuario,
 r.estado,
+r.metodo_pago,
+r.id_bono_cliente,
 s.fecha,
 s.hora_inicio
 FROM reservas r
@@ -76,9 +141,18 @@ $id_sesion =
 |--------------------------------------------------------------------------
 */
 $sql_sesion = "
-SELECT id_sesion, aforo, estado
-FROM sesiones
-WHERE id_sesion = ?
+SELECT
+s.id_sesion,
+s.aforo,
+s.estado,
+s.fecha,
+TIME_FORMAT(s.hora_inicio, '%H:%i') AS inicio,
+a.nombre AS actividad,
+e.nombre AS espacio
+FROM sesiones s
+JOIN actividades a ON a.id_actividad = s.id_actividad
+JOIN espacios e ON e.id_espacio = s.id_espacio
+WHERE s.id_sesion = ?
 FOR UPDATE
 ";
 $stmt_sesion =
@@ -120,18 +194,65 @@ $stmt_cancelar->execute();
 $stmt_cancelar->close();
 /*
 |--------------------------------------------------------------------------
+| 3.1 Devolver el uso si se pagó con bono
+|--------------------------------------------------------------------------
+*/
+
+if (
+$reserva["metodo_pago"] === "bono" &&
+$reserva["id_bono_cliente"] !== null
+) {
+$sql_devolver = "
+UPDATE bonos_clientes
+SET
+usos_disponibles = usos_disponibles + 1,
+estado = 'activo'
+WHERE id_bono_cliente = ?
+";
+$stmt_devolver =
+$conexion->prepare($sql_devolver);
+$stmt_devolver->bind_param(
+"i",
+$reserva["id_bono_cliente"]
+);
+$stmt_devolver->execute();
+$stmt_devolver->close();
+} elseif ($reserva["metodo_pago"] === "pago") {
+$sql_reembolsar = "
+UPDATE pagos
+SET estado = 'reembolsado'
+WHERE id_reserva = ?
+AND estado = 'pagado'
+";
+$stmt_reembolsar =
+$conexion->prepare($sql_reembolsar);
+$stmt_reembolsar->bind_param(
+"i",
+$id_reserva
+);
+$stmt_reembolsar->execute();
+$stmt_reembolsar->close();
+}
+/*
+|--------------------------------------------------------------------------
 | 4. Buscar la primera espera
 |--------------------------------------------------------------------------
 */
 
 $sql_espera = "
-SELECT id_espera, id_usuario
-FROM lista_espera
-WHERE id_sesion = ?
-AND estado = 'esperando'
+SELECT
+le.id_espera,
+le.id_usuario,
+u.nombre,
+u.email
+FROM lista_espera le
+JOIN usuarios u ON u.id_usuario = le.id_usuario
+WHERE le.id_sesion = ?
+AND le.estado = 'esperando'
+AND u.activo = 1
 ORDER BY
-fecha_solicitud ASC,
-id_espera ASC
+le.fecha_solicitud ASC,
+le.id_espera ASC
 LIMIT 1
 FOR UPDATE
 ";
@@ -178,10 +299,13 @@ if ($anterior) {
 $sql_promocionar = "
 UPDATE reservas
 SET
-estado = 'confirmada',
+estado = 'pendiente_pago',
 asistencia = 'pendiente',
 fecha_reserva = NOW(),
-codigo_reserva = ?
+codigo_reserva = ?,
+metodo_pago = NULL,
+importe = NULL,
+id_bono_cliente = NULL
 WHERE id_reserva = ?
 ";
 $stmt_promocionar =
@@ -205,7 +329,7 @@ codigo_reserva
 VALUES (
 ?,
 ?,
-'confirmada',
+'pendiente_pago',
 'pendiente',
 ?
 )
@@ -239,6 +363,60 @@ $primera_espera["id_espera"]
 );
 $stmt_promocionada->execute();
 $stmt_promocionada->close();
+/*
+|--------------------------------------------------------------------------
+| 5.1 Encolar el aviso de plaza pendiente de pago
+|--------------------------------------------------------------------------
+*/
+
+$asunto =
+"Tienes una plaza disponible: " .
+$sesion["actividad"];
+$cuerpo =
+"Hola " . $primera_espera["nombre"] . ",\n\n" .
+"Se ha liberado una plaza para ti en la sesión " .
+"por la que estabas en lista de espera.\n\n" .
+"Actividad: " . $sesion["actividad"] . "\n" .
+"Fecha: " . $sesion["fecha"] . "\n" .
+"Hora: " . $sesion["inicio"] . "\n" .
+"Espacio: " . $sesion["espacio"] . "\n\n" .
+"La plaza queda reservada, pero todavía debes " .
+"confirmarla y elegir cómo pagarla desde " .
+"Mi cuenta > Mis reservas.\n\n" .
+"Reservar Llocs";
+$clave_evento =
+"plaza_pendiente_pago:" .
+$primera_espera["id_espera"];
+$sql_notificacion = "
+INSERT INTO notificaciones (
+id_usuario,
+tipo,
+destinatario,
+asunto,
+cuerpo,
+clave_evento
+)
+VALUES (
+?,
+'plaza_pendiente_pago',
+?,
+?,
+?,
+?
+)
+";
+$stmt_notificacion =
+$conexion->prepare($sql_notificacion);
+$stmt_notificacion->bind_param(
+"issss",
+$id_promocionado,
+$primera_espera["email"],
+$asunto,
+$cuerpo,
+$clave_evento
+);
+$stmt_notificacion->execute();
+$stmt_notificacion->close();
 }
 /*
 |--------------------------------------------------------------------------
@@ -250,7 +428,7 @@ $sql_total = "
 SELECT COUNT(*) AS total
 FROM reservas
 WHERE id_sesion = ?
-AND estado = 'confirmada'
+AND estado IN ('confirmada', 'pendiente_pago')
 ";
 $stmt_total =
 $conexion->prepare($sql_total);

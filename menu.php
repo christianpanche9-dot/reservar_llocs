@@ -14,6 +14,9 @@ Actividades
 <a href="sesiones.php">
 Sesiones
 </a>
+<a href="calendario.php">
+Calendario
+</a>
 <?php if (!usuarioAutenticado()): ?>
 <a href="login.php">
 Iniciar sesión

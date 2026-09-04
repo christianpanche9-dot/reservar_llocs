@@ -1,0 +1,144 @@
+.calendario-app {
+max-width: 1200px;
+}
+.barra-calendario {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 1rem;
+margin: 1.5rem 0;
+}
+.barra-calendario h2 {
+margin: 0;
+color: #063b7a;
+font-size: 1.4rem;
+text-transform: capitalize;
+}
+.campo-filtro {
+max-width: 320px;
+margin-bottom: 1rem;
+}
+.campo-filtro label {
+display: block;
+margin-bottom: 6px;
+font-weight: 700;
+}
+.campo-filtro select {
+width: 100%;
+padding: 10px 12px;
+border: 1px solid #aeb8c6;
+border-radius: 7px;
+font: inherit;
+background-color: white;
+}
+#estado {
+margin: 0 0 1rem;
+color: #4d5663;
+font-weight: 600;
+}
+.dias-semana,
+.cuadricula {
+display: grid;
+grid-template-columns: repeat(7, minmax(0, 1fr));
+gap: 8px;
+}
+.dias-semana {
+margin-bottom: 8px;
+}
+.dias-semana span {
+padding: .6rem;
+border-radius: 8px;
+text-align: center;
+font-weight: 700;
+background: #063b7a;
+color: white;
+}
+.dia {
+display: flex;
+flex-direction: column;
+gap: .3rem;
+min-height: 130px;
+padding: .6rem;
+background: white;
+border: 1px solid #dce3ed;
+border-radius: 10px;
+box-shadow: 0 4px 12px rgba(31, 45, 61, 0.06);
+}
+.dia strong {
+color: #172033;
+font-size: .95rem;
+}
+.dia--fuera {
+background: #f5f7fb;
+border-color: #eaeef3;
+}
+.dia--fuera strong {
+color: #9aa5b1;
+}
+.dia--hoy {
+border: 2px solid #0876d1;
+box-shadow: 0 4px 14px rgba(8, 118, 209, 0.18);
+}
+.dia--hoy strong {
+color: #0876d1;
+}
+.sesion {
+display: block;
+width: 100%;
+padding: .4rem .5rem;
+color: #075f3a;
+background: #d8f3e7;
+border: 0;
+border-radius: 7px;
+font: inherit;
+font-size: .85rem;
+font-weight: 600;
+text-align: left;
+cursor: pointer;
+transition: transform .12s ease, box-shadow .12s ease;
+}
+.sesion:hover,
+.sesion:focus-visible {
+box-shadow: 0 4px 10px rgba(7, 95, 58, 0.25);
+transform: translateY(-1px);
+}
+.sesion--completa {
+color: #895000;
+background: #fff0cf;
+}
+.sesion--completa:hover,
+.sesion--completa:focus-visible {
+box-shadow: 0 4px 10px rgba(137, 80, 0, 0.25);
+}
+.detalle {
+margin-top: 1.5rem;
+padding: 1.25rem 1.5rem;
+background: white;
+border: 1px solid #dce3ed;
+border-radius: 14px;
+box-shadow: 0 8px 22px rgba(31, 45, 61, 0.08);
+}
+.detalle h2 {
+margin-top: 0;
+color: #063b7a;
+}
+.detalle a {
+display: inline-block;
+margin-top: .5rem;
+padding: 11px 18px;
+color: white;
+background-color: #0876d1;
+border-radius: 8px;
+font-weight: 700;
+text-decoration: none;
+}
+.detalle a:hover {
+background-color: #045fac;
+}
+
+@media (max-width: 750px) {
+.dias-semana { display: none; }
+.cuadricula { grid-template-columns: 1fr; gap: .6rem; }
+.dia { min-height: auto; }
+.barra-calendario { flex-wrap: wrap; }
+}

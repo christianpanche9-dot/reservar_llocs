@@ -2,6 +2,7 @@
 require_once "seguridad.php";
 require_once "conexion.php";
 require_once "funciones.php";
+require_once "funciones_reservas.php";
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 header("Location: sesiones.php");
 exit;
@@ -12,7 +13,12 @@ INPUT_POST,
 FILTER_VALIDATE_INT
 );
 $id_usuario = idUsuarioActual();
-if (!$id_sesion || !$id_usuario) {
+$metodo_pago = $_POST["metodo_pago"] ?? "";
+if (
+!$id_sesion ||
+!$id_usuario ||
+!in_array($metodo_pago, ["pago", "bono"], true)
+) {
 header("Location: sesiones.php?error=datos");
 exit;
 }
@@ -26,13 +32,16 @@ $conexion->begin_transaction();
 
 $sql_sesion = "
 SELECT
-id_sesion,
-fecha,
-hora_inicio,
-aforo,
-estado
-FROM sesiones
-WHERE id_sesion = ?
+s.id_sesion,
+s.fecha,
+s.hora_inicio,
+s.aforo,
+s.estado,
+a.precio
+FROM sesiones s
+INNER JOIN actividades a
+ON s.id_actividad = a.id_actividad
+WHERE s.id_sesion = ?
 FOR UPDATE
 ";
 $stmt_sesion = $conexion->prepare($sql_sesion);
@@ -90,10 +99,14 @@ $stmt_reserva->get_result()->fetch_assoc();
 $stmt_reserva->close();
 if (
 $reserva_anterior &&
-$reserva_anterior["estado"] === "confirmada"
+in_array(
+$reserva_anterior["estado"],
+["confirmada", "pendiente_pago"],
+true
+)
 ) {
 throw new Exception(
-"Ya tienes una reserva confirmada."
+"Ya tienes una reserva para esta sesión."
 );
 }
 /*
@@ -137,7 +150,7 @@ $sql_contar = "
 SELECT COUNT(*) AS total
 FROM reservas
 WHERE id_sesion = ?
-AND estado = 'confirmada'
+AND estado IN ('confirmada', 'pendiente_pago')
 ";
 $stmt_contar = $conexion->prepare($sql_contar);
 $stmt_contar->bind_param("i", $id_sesion);
@@ -156,6 +169,24 @@ if ($plazas_ocupadas < (int) $sesion["aforo"]) {
 $codigo_reserva = strtoupper(
 bin2hex(random_bytes(8))
 );
+/*
+|--------------------------------------------------------------------------
+| 5.1 Resolver el método de pago (efectivo o bono)
+|--------------------------------------------------------------------------
+*/
+
+[$importe, $id_bono_usado] = resolverMetodoPago(
+$conexion,
+$id_usuario,
+$metodo_pago,
+(float) $sesion["precio"]
+);
+/*
+|--------------------------------------------------------------------------
+| 5.2 Crear o reactivar la reserva
+|--------------------------------------------------------------------------
+*/
+
 if ($reserva_anterior) {
 $sql_guardar = "
 UPDATE reservas
@@ -163,14 +194,20 @@ SET
 estado = 'confirmada',
 asistencia = 'pendiente',
 fecha_reserva = NOW(),
-codigo_reserva = ?
+codigo_reserva = ?,
+metodo_pago = ?,
+importe = ?,
+id_bono_cliente = ?
 WHERE id_reserva = ?
 ";
 $stmt_guardar =
 $conexion->prepare($sql_guardar);
 $stmt_guardar->bind_param(
-"si",
+"ssdii",
 $codigo_reserva,
+$metodo_pago,
+$importe,
+$id_bono_usado,
 $reserva_anterior["id_reserva"]
 );
 } else {
@@ -180,27 +217,70 @@ id_sesion,
 id_usuario,
 estado,
 asistencia,
-codigo_reserva
+codigo_reserva,
+metodo_pago,
+importe,
+id_bono_cliente
 )
 VALUES (
 ?,
 ?,
 'confirmada',
 'pendiente',
+?,
+?,
+?,
 ?
 )
 ";
 $stmt_guardar =
 $conexion->prepare($sql_guardar);
 $stmt_guardar->bind_param(
-"iis",
+"iissdi",
 $id_sesion,
 $id_usuario,
-$codigo_reserva
+$codigo_reserva,
+$metodo_pago,
+$importe,
+$id_bono_usado
 );
 }
 $stmt_guardar->execute();
+$id_reserva = $reserva_anterior
+? $reserva_anterior["id_reserva"]
+: $conexion->insert_id;
 $stmt_guardar->close();
+/*
+|--------------------------------------------------------------------------
+| 5.3 Registrar el pago en el histórico
+|--------------------------------------------------------------------------
+*/
+
+$concepto = $metodo_pago === "bono"
+? "Reserva pagada con bono"
+: "Reserva de sesión";
+$sql_pago = "
+INSERT INTO pagos (
+id_usuario,
+id_reserva,
+id_bono_cliente,
+concepto,
+importe,
+estado
+)
+VALUES (?, ?, ?, ?, ?, 'pagado')
+";
+$stmt_pago = $conexion->prepare($sql_pago);
+$stmt_pago->bind_param(
+"iiisd",
+$id_usuario,
+$id_reserva,
+$id_bono_usado,
+$concepto,
+$importe
+);
+$stmt_pago->execute();
+$stmt_pago->close();
 /*
 | Si existía una antigua solicitud de espera,
 | la marcamos como promocionada.

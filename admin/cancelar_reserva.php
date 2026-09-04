@@ -18,6 +18,7 @@ exit;
 }
 try {
 $id_sesion =
+
 cancelarReservaYPromocionar(
 $conexion,
 $id_reserva

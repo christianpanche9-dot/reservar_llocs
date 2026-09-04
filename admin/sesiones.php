@@ -72,9 +72,23 @@ No se puede eliminar la sesión porque tiene reservas o
 apuntes en lista de espera asociados.
 </div>
 <?php endif; ?>
+<?php if (
+($_GET["mensaje"] ?? "") === "serie_creada"
+): ?>
+<div class="mensaje mensaje-exito">
+Se han creado
+<?= (int) ($_GET["cantidad"] ?? 0) ?>
+sesiones correctamente.
+</div>
+<?php endif; ?>
+<div class="grupo-botones">
 <a class="boton" href="nueva_sesion.php">
 Programar una sesión
 </a>
+<a class="boton boton-secundario" href="nueva_serie_sesiones.php">
+Programa una actividad recurrente
+</a>
+</div>
 <?php if ($resultado->num_rows === 0): ?>
 <p>No existen sesiones programadas.</p>
 <?php else: ?>

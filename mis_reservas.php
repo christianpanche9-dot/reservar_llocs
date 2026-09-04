@@ -1,11 +1,33 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 require_once "seguridad.php";
 require_once "conexion.php";
 require_once "funciones.php";
 $id_usuario = idUsuarioActual();
+$filtros_validos = ["todas", "proximas", "pasadas", "canceladas"];
+$filtro = $_GET["filtro"] ?? "todas";
+if (!in_array($filtro, $filtros_validos, true)) {
+$filtro = "todas";
+}
+$condicion_filtro = "";
+switch ($filtro) {
+case "proximas":
+$condicion_filtro = "
+AND r.estado IN ('confirmada', 'pendiente_pago')
+AND TIMESTAMP(s.fecha, s.hora_inicio) > NOW()
+";
+break;
+case "pasadas":
+$condicion_filtro = "
+AND r.estado != 'cancelada'
+AND TIMESTAMP(s.fecha, s.hora_inicio) <= NOW()
+";
+break;
+case "canceladas":
+$condicion_filtro = "
+AND r.estado = 'cancelada'
+";
+break;
+}
 $sql_reservas = "
 SELECT
 r.id_reserva,
@@ -13,13 +35,21 @@ r.fecha_reserva,
 r.estado,
 r.asistencia,
 r.codigo_reserva,
+r.metodo_pago,
+r.importe,
 s.id_sesion,
 s.fecha,
 s.hora_inicio,
 s.hora_fin,
 s.estado AS estado_sesion,
 a.nombre AS actividad,
-e.nombre AS espacio
+e.nombre AS espacio,
+tb.nombre AS nombre_bono,
+CASE
+WHEN r.estado = 'cancelada' THEN 'cancelada'
+WHEN TIMESTAMP(s.fecha, s.hora_inicio) > NOW() THEN 'futura'
+ELSE 'pasada'
+END AS situacion
 FROM reservas r
 INNER JOIN sesiones s
 ON r.id_sesion = s.id_sesion
@@ -27,7 +57,12 @@ INNER JOIN actividades a
 ON s.id_actividad = a.id_actividad
 INNER JOIN espacios e
 ON s.id_espacio = e.id_espacio
+LEFT JOIN bonos_clientes bc
+ON r.id_bono_cliente = bc.id_bono_cliente
+LEFT JOIN tipos_bono tb
+ON bc.id_tipo_bono = tb.id_tipo_bono
 WHERE r.id_usuario = ?
+" . $condicion_filtro . "
 ORDER BY
 s.fecha DESC,
 s.hora_inicio DESC
@@ -113,25 +148,41 @@ La reserva se ha cancelado.
 <?php endif; ?>
 <section>
 <h2>Reservas</h2>
+<nav class="filtros-reservas">
+<?php
+$etiquetas_filtro = [
+"todas" => "Todas",
+"proximas" => "Próximas",
+"pasadas" => "Pasadas",
+"canceladas" => "Canceladas"
+];
+foreach ($etiquetas_filtro as $clave => $etiqueta):
+?>
+<a
+href="mis_reservas.php?filtro=<?= $clave ?>"
+class="<?= $filtro === $clave ? "activo" : "" ?>"
+>
+<?= $etiqueta ?>
+</a>
+<?php endforeach; ?>
+</nav>
 <?php if ($reservas->num_rows === 0): ?>
-    <p>Todavía no tienes reservas.</p>
+    <p>No tienes reservas en esta categoría.</p>
 <?php else: ?>
 <div class="rejilla-reservas">
 <?php while (
 $reserva = $reservas->fetch_assoc()
 ): ?>
 <?php
-$inicio = new DateTime(
-$reserva["fecha"] .
-" " .
-$reserva["hora_inicio"]
-);
 $puede_cancelar =
-$reserva["estado"] === "confirmada" &&
-$reserva["estado_sesion"] !== "cancelada" &&
-$inicio > new DateTime();
+$reserva["situacion"] === "futura" &&
+$reserva["estado"] === "confirmada";
 ?>
-<article class="tarjeta-reserva">
+<article class="tarjeta-reserva<?=
+$reserva["estado"] === "pendiente_pago"
+? " aviso"
+: ""
+?>">
 <h3>
     <?= escapar(
         $reserva["actividad"]
@@ -166,6 +217,21 @@ $reserva["hora_fin"],
 $reserva["espacio"]
 ) ?>
 </p>
+<?php if ($reserva["estado"] === "pendiente_pago"): ?>
+<p class="codigo-reserva">
+⚠ Plaza disponible
+</p>
+<p>
+Has obtenido esta plaza desde la lista de
+espera. Confírmala y paga para conservarla.
+</p>
+<a
+class="boton"
+href="confirmar_pago_reserva.php?id=<?= $reserva["id_reserva"] ?>"
+>
+Confirmar y pagar
+</a>
+<?php else: ?>
 <p>
 <strong>Estado:</strong>
 <?= escapar(
@@ -181,6 +247,35 @@ Código:
 $reserva["codigo_reserva"]
 ) ?>
 </p>
+<?php endif; ?>
+<?php if ($reserva["metodo_pago"] === "bono"): ?>
+<p>
+<strong>Pago:</strong>
+Pagado con bono
+<?php if ($reserva["nombre_bono"]): ?>
+(<?= escapar($reserva["nombre_bono"]) ?>)
+<?php endif; ?>
+</p>
+<?php elseif ($reserva["metodo_pago"] === "pago"): ?>
+<p>
+<strong>Pago:</strong>
+Pago individual
+·
+<?= number_format($reserva["importe"], 2) ?> €
+</p>
+<?php endif; ?>
+<?php if ($reserva["situacion"] === "pasada"): ?>
+<p>
+<strong>Asistencia:</strong>
+<?php if ($reserva["asistencia"] === "asistio"): ?>
+Sí
+<?php elseif ($reserva["asistencia"] === "no_asistio"): ?>
+No
+<?php else: ?>
+Sin registrar
+<?php endif; ?>
+</p>
+<?php endif; ?>
 <?php endif; ?>
 <?php if ($puede_cancelar): ?>
 <form

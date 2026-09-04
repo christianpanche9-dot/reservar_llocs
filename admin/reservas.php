@@ -128,8 +128,13 @@ La asistencia se ha actualizado.
 La reserva se ha cancelado.
 </div>
 <?php endif; ?>
-<form method="get" class="filtros">
+<form action="confirmar_reserva.php" method="post" class="filtros">
 <div class="campo">
+<input
+type="hidden"
+name="id_sesion"
+value="<?= $sesion['id_sesion'] ?>"
+>
 <label for="fecha">Fecha</label>
 <input
 type="date"
