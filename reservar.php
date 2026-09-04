@@ -45,10 +45,37 @@ $stmt->execute();
 $resultado = $stmt->get_result();
 $sesion = $resultado->fetch_assoc();
 $stmt->close();
-$conexion->close();
 if (!$sesion) {
+$conexion->close();
 http_response_code(404);
 exit("La sesión no existe.");
+}
+$id_usuario = idUsuarioActual();
+$sql_reserva_actual = "
+SELECT id_reserva, estado
+FROM reservas
+WHERE id_sesion = ?
+AND id_usuario = ?
+AND estado IN ('confirmada', 'pendiente_pago')
+";
+$stmt_reserva_actual = $conexion->prepare($sql_reserva_actual);
+$stmt_reserva_actual->bind_param(
+"ii",
+$id_sesion,
+$id_usuario
+);
+$stmt_reserva_actual->execute();
+$reserva_actual = $stmt_reserva_actual
+->get_result()
+->fetch_assoc();
+$stmt_reserva_actual->close();
+$conexion->close();
+if ($reserva_actual) {
+header(
+"Location: detalle_sesion.php?id=" .
+$id_sesion
+);
+exit;
 }
 $inicio = new DateTime(
 $sesion["fecha"] . " " . $sesion["hora_inicio"]
@@ -116,8 +143,7 @@ $sesion["monitor_apellidos"]
 <?php if ($plazas_disponibles > 0): ?>
 <div class="mensaje exito">
 Quedan
-<?= $plazas_disponibles ?>
-plazas disponibles.
+<?= $plazas_disponibles ?> plazas disponibles.
 </div>
 <p>
 Al confirmar se creará una reserva.

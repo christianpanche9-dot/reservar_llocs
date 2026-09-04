@@ -111,8 +111,7 @@ texto_nivel($actividad['nivel'])
 
 <td>
 <?= (int)
-$actividad['duracion_minutos'] ?>
-minutos
+$actividad['duracion_minutos'] ?> minutos
 </td>
 
 <td>

@@ -112,8 +112,7 @@ name="viewport"
 content="width=device-width, initial-scale=1.0"
 >
 <title>
-<?= escapar($actividad['nombre']) ?>
-| Reservar Llocs
+<?= escapar($actividad['nombre']) ?> | Reservar Llocs
 </title>
 <link rel="stylesheet" href="estilos.css">
 </head>
@@ -161,8 +160,7 @@ $actividad['descripcion']
 <p>
 <strong>Duración habitual:</strong>
 <?= (int)
-$actividad['duracion_minutos'] ?>
-minutos
+$actividad['duracion_minutos'] ?> minutos
 </p>
 <a
 class="enlace-volver"
@@ -250,10 +248,9 @@ $sesion['monitor']
 ) ?>
 </p>
 <p>
-</p>
 <strong>Aforo:</strong>
-<?= $aforo ?>
-persona
+<?= $aforo ?> <?= plural($aforo, 'persona', 'personas') ?>
+</p>
 <div class="barra-ocupacion">
 <div
 class="barra-ocupacion-interior"
@@ -262,17 +259,14 @@ style="width:
 ></div>
 </div>
 <small>
-<?= $reservas ?>
-de
-<?= $aforo ?>
-plazas ocupadas
+<?= $reservas ?> de
+<?= $aforo ?> <?= plural($aforo, 'plaza ocupada', 'plazas ocupadas') ?>
 </small>
 </div>
 <div class="acciones-sesion">
 <?php if ($plazas > 0): ?>
 <span class="plazas-disponibles">
-<?= $plazas ?>
-plazas disponibles
+<?= $plazas ?> <?= plural($plazas, 'plaza disponible', 'plazas disponibles') ?>
 </span>
 <?php else: ?>
 <span class="sesion-completa">

@@ -110,11 +110,9 @@ $actividad['duracion_minutos'] ?>"
 >
 <?= escapar(
 $actividad['nombre']
-) ?>
-—
+) ?> —
 <?= (int)
-$actividad['duracion_minutos'] ?>
-min
+$actividad['duracion_minutos'] ?> min
 </option>
 <?php endwhile; ?>
 </select>
@@ -143,8 +141,7 @@ $espacio['aforo_maximo'] ?>"
 >
 <?= escapar(
 $espacio['nombre']
-) ?>
-—
+) ?> —
 máximo
 <?= (int)
 $espacio['aforo_maximo'] ?>
@@ -180,8 +177,7 @@ $monitor['apellidos']
 !empty(
 $monitor['especialidad']
 )
-): ?>
-—
+): ?> —
 <?= escapar(
 $monitor['especialidad']
 ) ?>

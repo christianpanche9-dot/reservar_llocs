@@ -129,8 +129,7 @@ Hola,
 <div class="mensaje mensaje-aviso">
 Tienes
 <?= $total_pendientes ?>
-<?= $total_pendientes === 1 ? "plaza pendiente" : "plazas pendientes" ?>
-de pago desde la lista de espera.
+<?= $total_pendientes === 1 ? "plaza pendiente" : "plazas pendientes" ?> de pago desde la lista de espera.
 <a href="mis_reservas.php">Revisar</a>
 </div>
 <?php endif; ?>
@@ -144,8 +143,7 @@ de pago desde la lista de espera.
 <?= date(
 "d/m/Y",
 strtotime($proxima_actividad["fecha"])
-) ?>
-·
+) ?> ·
 <?= substr(
 $proxima_actividad["hora_inicio"],
 0,
@@ -159,8 +157,7 @@ Es hoy
 Falta 1 día
 <?php else: ?>
 Faltan
-<?= $dias_restantes ?>
-días
+<?= $dias_restantes ?> días
 <?php endif; ?>
 </p>
 </section>

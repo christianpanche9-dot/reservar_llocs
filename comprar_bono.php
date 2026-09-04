@@ -51,8 +51,7 @@ El bono seleccionado no está disponible.
 <?php if ($tipo["dias_validez"]): ?>
 <p>
 <strong>Validez:</strong>
-<?= (int) $tipo["dias_validez"] ?>
-días
+<?= (int) $tipo["dias_validez"] ?> días
 </p>
 <?php endif; ?>
 <form action="procesar_compra_bono.php" method="post">

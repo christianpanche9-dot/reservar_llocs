@@ -242,16 +242,14 @@ $actividad['descripcion']
 <p class="dato-destacado">
 Duración habitual:
 <?= (int)
-$actividad['duracion_minutos'] ?>
-minutos
+$actividad['duracion_minutos'] ?> minutos
 </p>
 <?php if (
     (int) $actividad['proximas_sesiones'] > 0
 ): ?>
 <p class="proxima-sesion">
 <?= (int)
-$actividad['proximas_sesiones'] ?>
-próximas sesiones
+$actividad['proximas_sesiones'] ?> <?= plural((int) $actividad['proximas_sesiones'], 'próxima sesión', 'próximas sesiones') ?>
 </p>
 <p>
 Próxima:

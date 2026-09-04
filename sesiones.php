@@ -205,17 +205,14 @@ $sesion['monitor']
 ) ?>
 </p>
 <p>
-<?= $reservas ?>
-de
-<?= $aforo ?>
-plazas ocupadas
+<?= $reservas ?> de
+<?= $aforo ?> <?= plural($aforo, 'plaza ocupada', 'plazas ocupadas') ?>
 </p>
 </div>
 <div class="acciones-sesion">
 <?php if ($plazas > 0): ?>
 <span class="plazas-disponibles">
-<?= $plazas ?>
-plazas disponibles
+<?= $plazas ?> <?= plural($plazas, 'plaza disponible', 'plazas disponibles') ?>
 </span>
 <?php else: ?>
 <span class="sesion-completa">

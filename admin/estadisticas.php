@@ -114,8 +114,7 @@ $sesion["actividad"]
 strtotime(
 $sesion["fecha"]
 )
-) ?>
-·
+) ?> ·
 <?= substr(
 $sesion["hora_inicio"],
 0,

@@ -52,6 +52,14 @@ return substr($hora, 0, 5);
 return $objeto_hora->format('H:i');
 }
 
+function plural(
+int $cantidad,
+string $singular,
+string $plural
+): string {
+return $cantidad === 1 ? $singular : $plural;
+}
+
 function texto_nivel(string $nivel): string
 {
 $niveles = [

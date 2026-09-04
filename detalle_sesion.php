@@ -116,6 +116,30 @@ $puede_reservarse =
 && $sesion['estado'] === 'programada'
 && $plazas > 0;
 $usuario_autenticado = usuarioAutenticado();
+$reserva_actual = null;
+if ($usuario_autenticado) {
+$sql_reserva_actual = "
+SELECT id_reserva, estado
+FROM reservas
+WHERE id_sesion = ?
+AND id_usuario = ?
+AND estado IN ('confirmada', 'pendiente_pago')
+";
+$stmt_reserva_actual =
+$conexion->prepare($sql_reserva_actual);
+$id_usuario_actual = idUsuarioActual();
+$stmt_reserva_actual->bind_param(
+"ii",
+$id_sesion,
+$id_usuario_actual
+);
+$stmt_reserva_actual->execute();
+$reserva_actual = $stmt_reserva_actual
+->get_result()
+->fetch_assoc();
+$stmt_reserva_actual->close();
+}
+$error = $_GET["error"] ?? "";
 
 $lista_espera =
     !$sesion_terminada &&
@@ -131,8 +155,7 @@ name="viewport"
 content="width=device-width, initial-scale=1.0"
 >
 <title>
-<?= escapar($sesion['actividad']) ?>
-| Reservar Llocs
+<?= escapar($sesion['actividad']) ?> | Reservar Llocs
 </title>
 <link rel="stylesheet" href="estilos.css">
 </head>
@@ -202,8 +225,7 @@ $sesion['hora_fin']
 <span>Duración</span>
 <strong>
 <?= (int)
-$sesion['duracion_real'] ?>
-minutos
+$sesion['duracion_real'] ?> minutos
 </strong>
 </div>
 <div class="dato">
@@ -287,6 +309,13 @@ style="width:
     <?= $reservas ?>
  reservas confirmadas
 </p>
+<?php if ($error !== ""): ?>
+
+    <div class="mensaje mensaje-error">
+        <?= escapar($error) ?>
+    </div>
+
+<?php endif; ?>
 <?php if ($sesion_terminada): ?>
 
     <div class="mensaje mensaje-aviso">
@@ -298,6 +327,36 @@ style="width:
     <div class="mensaje mensaje-error">
         Esta sesión ha sido cancelada.
     </div>
+
+<?php elseif (
+    $reserva_actual &&
+    $reserva_actual['estado'] === 'confirmada'
+): ?>
+
+    <div class="mensaje mensaje-exito">
+        Ya tienes una plaza confirmada en esta sesión.
+    </div>
+    <a
+        class="boton boton-bloque"
+        href="mis_reservas.php"
+    >
+        Ver mi reserva
+    </a>
+
+<?php elseif (
+    $reserva_actual &&
+    $reserva_actual['estado'] === 'pendiente_pago'
+): ?>
+
+    <div class="mensaje mensaje-aviso">
+        Tienes una plaza pendiente de pago en esta sesión.
+    </div>
+    <a
+        class="boton boton-bloque"
+        href="confirmar_pago_reserva.php?id=<?= (int)$reserva_actual['id_reserva'] ?>"
+    >
+        Confirmar y pagar
+    </a>
 
 <?php elseif ($plazas > 0): ?>
 

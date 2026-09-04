@@ -199,8 +199,7 @@ $sesion["monitor_apellidos"]
 <strong>Ocupación:</strong>
 <?= $total_confirmadas ?>
 /
-<?= (int) $sesion["aforo"] ?>
-plazas
+<?= (int) $sesion["aforo"] ?> plazas
 (<?= $porcentaje ?> %)
 </p>
 <div class="barra-ocupacion">

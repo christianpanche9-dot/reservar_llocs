@@ -114,8 +114,7 @@ Imprimir
 <?= date(
 "d/m/Y",
 strtotime($sesion["fecha"])
-) ?>
-·
+) ?> ·
 <?= substr(
 $sesion["hora_inicio"],
 0,
@@ -129,8 +128,7 @@ $sesion["hora_fin"],
 ) ?>
 </p>
 <p>
-<?= escapar($sesion["espacio"]) ?>
-·
+<?= escapar($sesion["espacio"]) ?> ·
 <?= escapar(
 $sesion["monitor_nombre"] .
 " " .

@@ -25,6 +25,9 @@ Reservas
 <a href="estadisticas.php">
 Estadísticas
 </a>
+<a href="notificaciones.php">
+Notificaciones
+</a>
 <a href="../index.php">
 Ver web pública
 </a>

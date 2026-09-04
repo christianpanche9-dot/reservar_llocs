@@ -252,8 +252,7 @@ $reserva["codigo_reserva"]
 <p>
 <strong>Pago:</strong>
 Pagado con bono
-<?php if ($reserva["nombre_bono"]): ?>
-(<?= escapar($reserva["nombre_bono"]) ?>)
+<?php if ($reserva["nombre_bono"]): ?> (<?= escapar($reserva["nombre_bono"]) ?>)
 <?php endif; ?>
 </p>
 <?php elseif ($reserva["metodo_pago"] === "pago"): ?>
@@ -325,8 +324,7 @@ $espera["actividad"]
 <?= date(
     "d/m/Y",
 strtotime($espera["fecha"])
-) ?>
-·
+) ?> ·
 <?= substr(
 $espera["hora_inicio"],
 0,

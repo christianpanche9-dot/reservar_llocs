@@ -81,8 +81,7 @@ content="width=device-width, initial-scale=1.0"
 <p>
 <strong>Actividad:</strong>
 <?= escapar($pago["actividad"]) ?>
-<?php if ($pago["fecha_sesion"]): ?>
-·
+<?php if ($pago["fecha_sesion"]): ?> ·
 <?= date(
 "d/m/Y",
 strtotime($pago["fecha_sesion"])

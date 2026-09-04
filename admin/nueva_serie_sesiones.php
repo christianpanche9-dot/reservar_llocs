@@ -82,8 +82,7 @@ value="<?= htmlspecialchars($_SESSION['csrf_serie']) ?>">
 <option value="">Selecciona un espacio</option>
 <?php while ($espacio = $espacios->fetch_assoc()): ?>
 <option value="<?= (int) $espacio['id_espacio'] ?>">
-<?= htmlspecialchars($espacio['nombre']) ?>
-(capacidad <?= (int) $espacio['aforo_maximo'] ?>)
+<?= htmlspecialchars($espacio['nombre']) ?> (capacidad <?= (int) $espacio['aforo_maximo'] ?>)
 </option>
 <?php endwhile; ?>
 </select>

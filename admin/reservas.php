@@ -15,6 +15,7 @@ $buscar = trim($_GET["buscar"] ?? "");
 $estados_permitidos = [
 "",
 "confirmada",
+"pendiente_pago",
 "cancelada"
 ];
 $asistencias_permitidas = [
@@ -128,13 +129,8 @@ La asistencia se ha actualizado.
 La reserva se ha cancelado.
 </div>
 <?php endif; ?>
-<form action="confirmar_reserva.php" method="post" class="filtros">
+<form method="get" class="filtros">
 <div class="campo">
-<input
-type="hidden"
-name="id_sesion"
-value="<?= $sesion['id_sesion'] ?>"
->
 <label for="fecha">Fecha</label>
 <input
 type="date"
@@ -191,6 +187,14 @@ value="confirmada"
 : "" ?>
 >
 Confirmada
+</option>
+<option
+value="pendiente_pago"
+<?= $estado === "pendiente_pago"
+? "selected"
+: "" ?>
+>
+Pendiente de pago
 </option>
 <option
 value="cancelada"

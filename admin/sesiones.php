@@ -77,8 +77,7 @@ apuntes en lista de espera asociados.
 ): ?>
 <div class="mensaje mensaje-exito">
 Se han creado
-<?= (int) ($_GET["cantidad"] ?? 0) ?>
-sesiones correctamente.
+<?= (int) ($_GET["cantidad"] ?? 0) ?> sesiones correctamente.
 </div>
 <?php endif; ?>
 <div class="grupo-botones">
