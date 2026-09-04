@@ -19,12 +19,18 @@ $servidor = $variables_entorno['DB_HOST'] ?? 'localhost';
 $usuario = $variables_entorno['DB_USER'] ?? 'root';
 $password = $variables_entorno['DB_PASS'] ?? '';
 $base_datos = $variables_entorno['DB_NAME'] ?? 'reservar_llocs';
-$conexion = new mysqli(
+try {
+$conexion = @new mysqli(
 $servidor,
 $usuario,
 $password,
 $base_datos
 );
+} catch (mysqli_sql_exception $error) {
+die(
+'No se ha podido conectar con la base de datos.'
+);
+}
 if ($conexion->connect_error) {
 die(
 'No se ha podido conectar con la base de datos.'
