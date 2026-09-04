@@ -1,4 +1,6 @@
 .DS_Store
 vendor/
 .env
+.env.production
 notificaciones.log
+*.sql
