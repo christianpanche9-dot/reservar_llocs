@@ -71,12 +71,8 @@ JOIN monitores m ON m.id_monitor = s.id_monitor
 LEFT JOIN reservas r ON r.id_sesion = s.id_sesion
 WHERE s.estado = 'programada'
 AND s.fecha BETWEEN ? AND ?";
-$tipos = 'ss';
-$parametros = [$inicioTexto, $finTexto];
 if ($idActividad) {
 $sql .= " AND s.id_actividad = ?";
-$tipos .= 'i';
-$parametros[] = $idActividad;
 }
 $sql .= " GROUP BY
 s.id_sesion, s.fecha, s.hora_inicio, s.hora_fin,
@@ -84,7 +80,20 @@ s.aforo, a.id_actividad, a.nombre, a.categoria,
 a.nivel, e.nombre, m.nombre
 ORDER BY s.fecha, s.hora_inicio";
 $stmt = $conexion->prepare($sql);
-$stmt->bind_param($tipos, ...$parametros);
+if ($idActividad) {
+$stmt->bind_param(
+'ssi',
+$inicioTexto,
+$finTexto,
+$idActividad
+);
+} else {
+$stmt->bind_param(
+'ss',
+$inicioTexto,
+$finTexto
+);
+}
 $stmt->execute();
 $resultado = $stmt->get_result();
 $sesiones = [];
@@ -117,13 +126,3 @@ responder([
 'total' => count($sesiones),
 'sesiones' => $sesiones
 ]);
-
-try {
-// Validación, consulta y construcción de la respuesta.
-} catch (Throwable $error) {
-error_log($error->getMessage());
-responder([
-'ok' => false,
-'error' => 'No se han podido obtener las sesiones.'
-], 500);
-}
